@@ -19,18 +19,16 @@ app.add_middleware(
 # Load student data from CSV (assuming CSV file named 'students.csv')
 df = pd.read_csv('q-fastapi.csv')
 
-# Convert the dataframe to a list of dictionaries for easy JSON conversion
-students = df.to_dict(orient="records")
-
 @app.get("/api")
-async def get_students(class_: List[str] = Query(None)):
-    """
-    Endpoint to return students data.
-    If 'class' query parameter is provided, filter students by class.
-    """
-    if class_:
-        filtered_students = [student for student in students if student["class"] in class_]
+async def get_students(q: List[str] = Query(None)):
+    # If class_ is provided, filter students by class
+    if q:
+        filtered_df = df[df["class"].isin(q)]
     else:
-        filtered_students = students
+        filtered_df = df
 
-    return JSONResponse(content={"students": filtered_students})
+    # Convert the filtered DataFrame to a list of dictionaries
+    students = filtered_df.to_dict(orient="records")
+
+    # Return the data in the required format
+    return JSONResponse(content={"students": students})
