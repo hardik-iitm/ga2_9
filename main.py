@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 # Load student data from CSV (assuming CSV file named 'students.csv')
-df = pd.read_csv('q-fastapi-csv.csv')
+df = pd.read_csv('q-fastapi.csv')
 
 # Convert the dataframe to a list of dictionaries for easy JSON conversion
 students = df.to_dict(orient="records")
